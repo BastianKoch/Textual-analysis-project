@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-Textual analysis class group project
+A group project for a Textual Analysis course that analyzes earnings call transcripts using natural language processing techniques. This dataset contains corporate earnings conference call transcripts spanning multiple years and companies.
 
 ## Project Organization
 
