@@ -1,6 +1,6 @@
 # Contributing to Textual Analysis Project
 
-Thank you for contributing to this project! Please follow these guidelines to keep our codebase organized and maintainable.
+Please follow these guidelines to keep our codebase organized and maintainable.
 
 ## Getting Started
 

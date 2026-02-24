@@ -17,7 +17,7 @@ A group project for a Textual Analysis course that analyzes earnings call transc
 │   ├── processed      <- The final, canonical data sets for modeling
 │   └── raw            <- Primary dataset in original form (e.g., earnings call transcripts)
 │
-├── literature         <- Literature, data dictionaries, and all explanatory materials
+├── references         <- Data dictionaries, manuals, and all explanatory materials
 │
 ├── notebooks          <- Jupyter notebooks for exploration and analysis
 │                         Naming convention: number-initials-description

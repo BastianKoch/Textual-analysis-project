@@ -12,13 +12,24 @@ def load_transcript(filepath: str | Path) -> str:
     Parameters
     ----------
     filepath : str or Path
-        Path to the transcript file
+        Path to the transcript file (relative or absolute)
         
     Returns
     -------
     str
         Raw transcript text
     """
+    filepath = Path(filepath)
+    
+    # If path doesn't exist, try to find it relative to project root
+    if not filepath.exists():
+        # Try from current directory first, then from parent directories
+        for potential_root in [Path.cwd()] + list(Path.cwd().parents):
+            potential_path = potential_root / filepath
+            if potential_path.exists():
+                filepath = potential_path
+                break
+    
     with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
         return f.read()
 
