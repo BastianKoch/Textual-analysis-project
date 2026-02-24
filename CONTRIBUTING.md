@@ -35,10 +35,8 @@ Follow this naming pattern for new notebooks:
 {number}.{version}-{initials}-{short-description}.ipynb
 ```
 
-Examples:
+Example:
 - `2.0-bk-sentiment-analysis.ipynb`
-- `3.0-ad-feature-extraction.ipynb`
-- `1.5-ar-data-exploration.ipynb`
 
 **Guidelines:**
 - Start with a number for ordering
