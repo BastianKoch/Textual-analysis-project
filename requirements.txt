@@ -1,0 +1,25 @@
+# Core dependencies
+pip
+python-dotenv
+-e .
+
+# Development tools
+ruff
+
+# Jupyter notebooks
+jupyter
+ipykernel
+
+# Data manipulation
+pandas
+numpy
+
+# Text processing (uncomment as needed)
+nltk
+# spacy
+scikit-learn
+
+# Visualization (uncomment as needed)
+matplotlib
+seaborn
+plotly
