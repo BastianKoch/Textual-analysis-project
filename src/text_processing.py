@@ -1,8 +1,22 @@
 """Text processing utilities for earnings call transcripts."""
 
+import os
 import re
 from pathlib import Path
 from typing import Optional
+
+# Automatically set working directory to project root when this module is imported
+# This ensures relative paths work correctly regardless of where notebooks/scripts are run from
+_current_dir = Path.cwd()
+if _current_dir.name == "notebooks" or _current_dir.name.startswith("."):
+    # If we're in notebooks folder or hidden folder, go to parent
+    os.chdir(_current_dir.parent)
+elif not (_current_dir / "src" / "text_processing.py").exists():
+    # If src folder doesn't exist in current dir, search up the tree
+    for parent in _current_dir.parents:
+        if (parent / "src" / "text_processing.py").exists():
+            os.chdir(parent)
+            break
 
 
 def load_transcript(filepath: str | Path) -> str:
