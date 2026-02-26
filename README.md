@@ -155,6 +155,35 @@ When you're done working:
 deactivate
 ```
 
+## Available Make Commands
+
+All commands should be run from the project root with the virtual environment activated.
+
+| Command | Description |
+|---|---|
+| `make requirements` | Install all Python dependencies from `requirements.txt` |
+| `make process_transcripts` | Process all earnings call transcripts (parse participants, presentations, Q&A) |
+| `make esg_scores` | Build ESG topic scores dataset using TF-IDF (outputs `data/processed/esg_scores.csv`) |
+| `make gvkeys` | Extract unique gvkeys from Overview_Calls.csv (outputs `data/processed/gvkeys.csv`) |
+| `make lint` | Check code style with ruff |
+| `make format` | Auto-format source code with ruff |
+| `make clean` | Delete compiled Python files and `__pycache__` directories |
+| `make help` | List all available commands |
+
+### Processing Transcripts
+
+To parse and segment all earnings call transcripts into the `data/processed/` directory:
+
+```bash
+make process_transcripts
+```
+
+This script:
+1. Reads the transcript list from `data/raw/list_earnings_calls_group_project_upload.csv`
+2. For each call, extracts corporate participants and analysts
+3. Splits each transcript into presentation, questions, and answers
+4. Writes results to `data/processed/Transcripts/`
+
 ## Data Access
 
 The earnings call transcript data is not included in this repository. To access it:

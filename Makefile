@@ -56,6 +56,20 @@ create_environment:
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## Process earnings call transcripts
+.PHONY: process_transcripts
+process_transcripts:
+	$(PYTHON_INTERPRETER) src/earnings_calls_processing.py
+
+## Build ESG topic scores dataset (TF-IDF weighted, E/S/G breakdown)
+.PHONY: esg_scores
+esg_scores:
+	$(PYTHON_INTERPRETER) src/build_esg_dataset.py
+
+## Extract unique gvkeys from Overview_Calls.csv
+.PHONY: gvkeys
+gvkeys:
+	$(PYTHON_INTERPRETER) src/extract_gvkeys.py
 
 
 #################################################################################
