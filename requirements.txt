@@ -1,7 +1,6 @@
 # Core dependencies
 pip
 python-dotenv
--e .
 
 # Development tools
 ruff
