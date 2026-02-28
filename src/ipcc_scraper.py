@@ -143,6 +143,32 @@ def join_broken_sentences(text):
 text = join_broken_sentences(raw).strip()
 
 # ---------------------------------------------------------------------------
+# Normalise text for NLP: remove numbers and special characters
+# ---------------------------------------------------------------------------
+def normalize_for_nlp(text):
+    lines = text.splitlines()
+    out = []
+    for line in lines:
+        if not line.strip():
+            out.append("")
+            continue
+        line = re.sub(r"\d", "", line)
+        line = re.sub(r"[\u00b0%\u00b1\u2264\u2265\u00d7\u00f7\u2248\u2260\u221e\u2192\u2190\u2191\u2193\u221a\u2211\u2022\u00b7\u2013\u2014]", " ", line)
+        line = line.encode("ascii", errors="ignore").decode("ascii")
+        line = re.sub(r"[^a-zA-Z\s\-\'.,:;!?()]", " ", line)
+        line = re.sub(r"(?<![a-zA-Z])[-']|[-'](?![a-zA-Z])", " ", line)
+        line = re.sub(r"\(\s*\)", " ", line)
+        line = re.sub(r" {2,}", " ", line).strip()
+        if len(line.split()) < 3:
+            out.append("")
+            continue
+        out.append(line)
+    joined = "\n".join(out)
+    return re.sub(r"\n{3,}", "\n\n", joined).strip()
+
+text = normalize_for_nlp(text)
+
+# ---------------------------------------------------------------------------
 # Save
 # ---------------------------------------------------------------------------
 out_path = (

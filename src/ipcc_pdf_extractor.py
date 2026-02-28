@@ -237,6 +237,56 @@ raw = re.sub(r"\n{3,}", "\n\n", raw)
 text = raw.strip()
 
 # ---------------------------------------------------------------------------
+# Normalise text for NLP: remove numbers and special characters
+# ---------------------------------------------------------------------------
+def normalize_for_nlp(text):
+    lines = text.splitlines()
+    out = []
+    for line in lines:
+        if not line.strip():
+            out.append("")
+            continue
+
+        # 1. Remove all digit characters
+        line = re.sub(r"\d", "", line)
+
+        # 2. Remove scientific / typographic symbols
+        #    °  %  ±  ≤  ≥  ×  ÷  ≈  ≠  ∞  →  ←  ↑  ↓  √  ∑  •  ·
+        #    em-dash  en-dash  non-breaking space ligatures etc.
+        line = re.sub(r"[°%±≤≥×÷≈≠∞→←↑↓√∑•·–—\u00b0\u2013\u2014\u2022\u00b7]", " ", line)
+
+        # 3. Remove any remaining non-ASCII characters
+        line = line.encode("ascii", errors="ignore").decode("ascii")
+
+        # 4. Remove characters that aren't letters, spaces, hyphens (within
+        #    words), apostrophes (contractions), or basic sentence punctuation
+        line = re.sub(r"[^a-zA-Z\s\-\'.,:;!?()]", " ", line)
+
+        # 5. Clean up orphaned hyphens / apostrophes (not flanked by letters)
+        line = re.sub(r"(?<![a-zA-Z])[-']|[-'](?![a-zA-Z])", " ", line)
+
+        # 6. Remove empty parentheses / brackets left after stripping
+        line = re.sub(r"\(\s*\)", " ", line)
+        line = re.sub(r",\s*,", ",", line)   # double commas
+
+        # 7. Collapse multiple spaces
+        line = re.sub(r" {2,}", " ", line).strip()
+
+        # 8. Drop lines that are now too short to be meaningful (< 3 words)
+        if len(line.split()) < 3:
+            out.append("")
+            continue
+
+        out.append(line)
+
+    # Collapse extra blank lines that remain after stripping
+    joined = "\n".join(out)
+    joined = re.sub(r"\n{3,}", "\n\n", joined)
+    return joined.strip()
+
+text = normalize_for_nlp(text)
+
+# ---------------------------------------------------------------------------
 # Save
 # ---------------------------------------------------------------------------
 OUT_PATH.write_text(text, encoding="utf-8")
