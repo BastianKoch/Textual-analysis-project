@@ -73,6 +73,12 @@ raw = re.sub(r"\{[^}]{0,500}\}", "", raw, flags=re.DOTALL)
 # so that CO\n2 → CO2 before the lone "2" is accidentally deleted
 raw = re.sub(r"([A-Z]{1,3})\n(\d)\b", r"\1\2", raw)
 
+# Join unit suffixes broken onto their own line:
+# GtCO2\n-eq → GtCO2-eq,  yr\n–1 → yr–1,  CO2\n-FFI → CO2-FFI
+raw = re.sub(r"(\w)\n(-eq|-FFI|-LULUCF|-eq yr)", r"\1\2", raw)
+raw = re.sub(r"(yr)\n([–-]\d)", r"\1\2", raw)
+raw = re.sub(r"(\d)\n([–-]\d)", r"\1\2", raw)
+
 # Remove standalone footnote numbers (a line containing only digits)
 raw = re.sub(r"^\d{1,3}$", "", raw, flags=re.MULTILINE)
 
