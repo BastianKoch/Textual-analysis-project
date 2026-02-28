@@ -105,6 +105,79 @@ if annex_match:
 # e.g. "Foreword  ----... v"  or  "Section 2 ----... 41"
 raw = re.sub(r"^.{2,100}-{5,}.*$", "", raw, flags=re.MULTILINE)
 
+# ---------------------------------------------------------------------------
+# Remove figure/table data fragments (axis labels, legends, chart values)
+# ---------------------------------------------------------------------------
+# 1. Lines consisting only of bullet/dot rating symbols (•••, ••, etc.)
+raw = re.sub(r"^[•·\u25e6●\u25cb◆◇■□▪▫\s]+$", "", raw, flags=re.MULTILINE)
+
+# 2. Bullets followed by short figure labels: "•• damage", "••• Wildfire"
+raw = re.sub(r"^[•·●◆▪\s]{2,}\s*\w[\w\s]{0,25}$", "", raw, flags=re.MULTILINE)
+
+# 3. Standalone °C or °C with dash/en-dash (temperature axis tick)
+raw = re.sub(r"^[°C\s\u2013\-]+$", "", raw, flags=re.MULTILINE)
+
+# 4. Standalone risk-rating letters used in RFC figures: bare "r" or "R"
+raw = re.sub(r"^[rR]$", "", raw, flags=re.MULTILINE)
+
+# 5. Percentage axis tick labels: +35%, -20%, +3, -10 etc. (signed number, ≤ 5 chars)
+raw = re.sub(r"^[+\-\u2013]\d{1,3}(\.\d+)?%?$", "", raw, flags=re.MULTILINE)
+
+# 6. Chart legend labels for RFC risk levels
+raw = re.sub(
+    r"^(very )?(low|high)( (low|high))?$",
+    "", raw, flags=re.MULTILINE | re.IGNORECASE
+)
+raw = re.sub(r"^intermediate (low|high)$", "", raw, flags=re.MULTILINE | re.IGNORECASE)
+
+# 7. Year-sequence lines (axis ticks like "2000 2015 2050 2100")
+raw = re.sub(r"^\d{4}(\s+\d{4})+$", "", raw, flags=re.MULTILINE)
+
+# 8. Lines of only "0 days", "365 days", "0%", "100%" (infographic duration/pct labels)
+raw = re.sub(r"^\d+\s*(days?|%)$", "", raw, flags=re.MULTILINE | re.IGNORECASE)
+
+# 9. Specific known figure/chart labels
+raw = re.sub(r"^AR5 AR6$", "", raw, flags=re.MULTILINE)           # RFC comparison label
+raw = re.sub(r"^intermediate$", "", raw, flags=re.MULTILINE)       # RFC legend fragment
+
+# 10. Remove blocks of figure axis text: runs of 5+ consecutive non-blank lines
+#     that are each ≤ 25 characters, contain no sentence-ending punctuation, and
+#     don't start with a digit. These are almost always chart axis label lists.
+def remove_axis_label_blocks(text, min_run=5, max_len=25):
+    lines = text.splitlines()
+
+    def is_axis_candidate(line):
+        s = line.strip()
+        if not s or len(s) > max_len:
+            return False
+        if re.search(r'[.!?:;]', s):   # has punctuation → real sentence fragment
+            return False
+        if re.match(r'^\d', s):        # starts with digit → stat / year
+            return False
+        return True
+
+    to_remove = set()
+    n = len(lines)
+    i = 0
+    while i < n:
+        if is_axis_candidate(lines[i]):
+            run = []
+            j = i
+            # Collect consecutive axis-candidate non-blank lines
+            while j < n and lines[j].strip() and is_axis_candidate(lines[j]):
+                run.append(j)
+                j += 1
+            if len(run) >= min_run:
+                for idx in run:
+                    to_remove.add(idx)
+            i = j if j > i else i + 1
+        else:
+            i += 1
+
+    return "\n".join("" if idx in to_remove else l for idx, l in enumerate(lines))
+
+raw = remove_axis_label_blocks(raw)
+
 # ---- Chemical formulas: join subscripts BEFORE footnote removal ----
 # CO\n2, CH\n4, N\n2\nO, NO\n2, H\n2\nO, SO\n2 etc.
 raw = re.sub(r"\b(CO|CH|SO|NO|N)\n(\d)", r"\1\2", raw)
