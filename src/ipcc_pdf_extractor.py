@@ -78,12 +78,26 @@ SECTION_HEADERS = [
     r"^CLIMATE CHANGE 2023$",
     r"^Synthesis Report$",
     r"^A Report of the Intergovernmental Panel on Climate Change$",
+    # TOC section-category labels
+    r"^Contents$",
+    r"^Front matter$",
+    r"^SPM$",
+    r"^Sections$",
 ]
 for pattern in SECTION_HEADERS:
     raw = re.sub(pattern, "", raw, flags=re.MULTILINE)
 
 # Remove IPCC cross-reference citation blocks: {2.1.1}, {WGI SPM A.1 ...}
 raw = re.sub(r"\{[^}]{1,80}\}", "", raw)
+
+# Strip front matter: remove everything before the first "Foreword and Preface"
+foreword_match = re.search(r"^Foreword and Preface$", raw, re.MULTILINE)
+if foreword_match:
+    raw = raw[foreword_match.start():]
+
+# Remove table of contents: lines with 5+ consecutive dashes (TOC entries)
+# e.g. "Foreword  ----... v"  or  "Section 2 ----... 41"
+raw = re.sub(r"^.{2,100}-{5,}.*$", "", raw, flags=re.MULTILINE)
 
 # ---- Chemical formulas: join subscripts BEFORE footnote removal ----
 # CO\n2, CH\n4, N\n2\nO, NO\n2, H\n2\nO, SO\n2 etc.
