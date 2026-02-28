@@ -1,7 +1,7 @@
 """
 Extract and clean text from the OECD Guidelines for Multinational Enterprises PDF.
 
-Output: data/external/Text corpus/S/OECD_Guidelines.txt
+Output: data/processed/Text corpus/S/OECD_Guidelines.txt
 
 Usage
 -----
@@ -17,7 +17,9 @@ PDF_PATH = (
     Path(__file__).resolve().parents[1]
     / "data" / "external" / "Text corpus" / "S" / "OECD_Guidelines.pdf"
 )
-OUT_PATH = PDF_PATH.with_suffix(".txt")
+ROOT = Path(__file__).resolve().parents[1]
+OUT_PATH = ROOT / "data" / "processed" / "Text corpus" / "S" / "OECD_Guidelines.txt"
+OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------------------
 # Extract text page by page
