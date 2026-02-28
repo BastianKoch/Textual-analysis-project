@@ -86,9 +86,14 @@ extract_ipcc_pdf:
 extract_oecd:
 	$(PYTHON_INTERPRETER) src/oecd_pdf_extractor.py
 
-## Build full reference text corpus (IPCC scraped + IPCC PDF + OECD)
+## Extract and clean OECD Corporate Governance Principles PDF → data/processed/Text corpus/G/
+.PHONY: extract_governance
+extract_governance:
+	$(PYTHON_INTERPRETER) src/governance_pdf_extractor.py
+
+## Build full reference text corpus (IPCC scraped + IPCC PDF + OECD + Governance)
 .PHONY: build_corpus
-build_corpus: scrape_ipcc extract_ipcc_pdf extract_oecd
+build_corpus: scrape_ipcc extract_ipcc_pdf extract_oecd extract_governance
 
 
 #################################################################################
