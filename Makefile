@@ -76,14 +76,19 @@ gvkeys:
 scrape_ipcc:
 	$(PYTHON_INTERPRETER) src/ipcc_scraper.py
 
-## Extract and clean OECD Guidelines PDF → data/external/Text corpus/S/
+## Extract and clean IPCC AR6 Full Volume PDF → data/processed/Text corpus/E/
+.PHONY: extract_ipcc_pdf
+extract_ipcc_pdf:
+	$(PYTHON_INTERPRETER) src/ipcc_pdf_extractor.py
+
+## Extract and clean OECD Guidelines PDF → data/processed/Text corpus/S/
 .PHONY: extract_oecd
 extract_oecd:
 	$(PYTHON_INTERPRETER) src/oecd_pdf_extractor.py
 
-## Build full reference text corpus (IPCC + OECD)
+## Build full reference text corpus (IPCC scraped + IPCC PDF + OECD)
 .PHONY: build_corpus
-build_corpus: scrape_ipcc extract_oecd
+build_corpus: scrape_ipcc extract_ipcc_pdf extract_oecd
 
 
 #################################################################################
