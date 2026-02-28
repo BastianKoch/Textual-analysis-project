@@ -71,6 +71,20 @@ esg_scores:
 gvkeys:
 	$(PYTHON_INTERPRETER) src/extract_gvkeys.py
 
+## Scrape and clean IPCC AR6 Synthesis Report → data/external/Text corpus/E/
+.PHONY: scrape_ipcc
+scrape_ipcc:
+	$(PYTHON_INTERPRETER) src/ipcc_scraper.py
+
+## Extract and clean OECD Guidelines PDF → data/external/Text corpus/S/
+.PHONY: extract_oecd
+extract_oecd:
+	$(PYTHON_INTERPRETER) src/oecd_pdf_extractor.py
+
+## Build full reference text corpus (IPCC + OECD)
+.PHONY: build_corpus
+build_corpus: scrape_ipcc extract_oecd
+
 
 #################################################################################
 # Self Documenting Commands                                                     #

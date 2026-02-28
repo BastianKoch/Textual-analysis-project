@@ -1,7 +1,7 @@
 """
 Scrape the IPCC AR6 Synthesis Report (Longer Report) and save cleaned plain text.
 
-Output: data/external/ipcc_ar6_syr_longer_report.txt
+Output: data/external/Text corpus/E/ipcc_ar6_syr_longer_report.txt
 
 Usage
 -----
@@ -147,7 +147,7 @@ text = join_broken_sentences(raw).strip()
 # ---------------------------------------------------------------------------
 out_path = (
     Path(__file__).resolve().parents[1]
-    / "data" / "external" / "ipcc_ar6_syr_longer_report.txt"
+    / "data" / "external" / "Text corpus" / "E" / "ipcc_ar6_syr_longer_report.txt"
 )
 out_path.parent.mkdir(parents=True, exist_ok=True)
 out_path.write_text(text, encoding="utf-8")
