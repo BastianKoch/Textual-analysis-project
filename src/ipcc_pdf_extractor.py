@@ -95,6 +95,12 @@ foreword_match = re.search(r"^Foreword and Preface$", raw, re.MULTILINE)
 if foreword_match:
     raw = raw[foreword_match.start():]
 
+# Strip back matter: remove everything from Annex I (Glossary) onwards
+# The glossary section starts with "Annex I\nGlossary" as standalone lines
+annex_match = re.search(r"^Annex I\nGlossary$", raw, re.MULTILINE)
+if annex_match:
+    raw = raw[:annex_match.start()]
+
 # Remove table of contents: lines with 5+ consecutive dashes (TOC entries)
 # e.g. "Foreword  ----... v"  or  "Section 2 ----... 41"
 raw = re.sub(r"^.{2,100}-{5,}.*$", "", raw, flags=re.MULTILINE)
