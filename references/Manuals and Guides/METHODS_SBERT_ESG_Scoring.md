@@ -153,7 +153,7 @@ informative.
 ## 4. Scoring Earnings-Call Transcripts
 
 *Script:* `src/score_transcripts_sbert.py`
-*Output:* `results/esg_call_similarity.{parquet,csv}`
+*Output:* `data/processed/esg_call_similarity.{parquet,csv}`
 
 ### 4.1 Input: processed transcript segments
 
@@ -211,7 +211,7 @@ from roughly 0.10 to 0.45 across the full dataset (see Section 5).
 
 ### 5.1 Output file
 
-`results/esg_call_similarity.parquet` (also `.csv`), one row per earnings call.
+`data/processed/esg_call_similarity.parquet` (also `.csv`), one row per earnings call.
 
 | Column | Description |
 |--------|-------------|
@@ -376,7 +376,7 @@ Key file locations:
 | G corpus | `data/processed/Text corpus/G/` |
 | Reference vectors | `data/processed/esg_vectors/{E,S,G}_vector.npy` |
 | Transcript segments | `data/processed/Transcripts/Call_segments/` |
-| Scores (full dataset) | `results/esg_call_similarity.{parquet,csv}` |
+| Scores (full dataset) | `data/processed/esg_call_similarity.{parquet,csv}` |
 
 Python environment: `venv/` (Python 3.10). Key packages: `sentence-transformers`,
 `torch`, `numpy`, `pandas`, `pyarrow`, `pymupdf`, `beautifulsoup4`, `tqdm`.

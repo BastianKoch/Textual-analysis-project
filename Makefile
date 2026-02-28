@@ -100,7 +100,7 @@ build_corpus: scrape_ipcc extract_ipcc_pdf extract_oecd extract_governance
 build_esg_vectors: build_corpus
 	$(PYTHON_INTERPRETER) src/build_esg_vectors.py
 
-## Score earnings-call transcripts with Sentence-BERT ESG similarity → results/
+## Score earnings-call transcripts with Sentence-BERT ESG similarity → data/processed/
 .PHONY: score_sbert
 score_sbert: build_esg_vectors
 	$(PYTHON_INTERPRETER) src/score_transcripts_sbert.py

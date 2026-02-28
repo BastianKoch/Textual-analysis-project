@@ -70,7 +70,7 @@ VECTORS_DIR  = DATA_DIR / "processed" / "esg_vectors"
 SEGMENTS_DIR = DATA_DIR / "processed" / "Transcripts" / "Call_segments"
 OVERVIEW_CSV = DATA_DIR / "processed" / "Transcripts" / "Overview_Calls.csv"
 
-RESULTS_DIR = PROJECT_ROOT / "results"
+RESULTS_DIR = DATA_DIR / "processed"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 OUTPUT_PARQUET = RESULTS_DIR / "esg_call_similarity.parquet"
