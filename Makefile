@@ -95,6 +95,11 @@ extract_governance:
 .PHONY: build_corpus
 build_corpus: scrape_ipcc extract_ipcc_pdf extract_oecd extract_governance
 
+## Build ESG reference vectors (Sentence-BERT, all-mpnet-base-v2) → data/processed/esg_vectors/
+.PHONY: build_esg_vectors
+build_esg_vectors: build_corpus
+	$(PYTHON_INTERPRETER) src/build_esg_vectors.py
+
 
 #################################################################################
 # Self Documenting Commands                                                     #
