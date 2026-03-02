@@ -36,10 +36,11 @@ OUT_ROOT     = DATA_DIR / "Text corpus"
 
 
 def normalize(text: str) -> str:
-    """Lowercase → strip punctuation → strip digits → remove stopwords → join."""
+    """Lowercase → remove confidence labels → strip punctuation → strip digits → remove stopwords → join."""
     tokens = []
     for line in text.splitlines():
         line = line.lower()
+        line = re.sub(r"\([^)]*confidence[^)]*\)", "", line)  # remove e.g. (high confidence)
         line = line.translate(_PUNCT_TABLE)      # remove punctuation
         line = re.sub(r"\d+", "", line)           # remove digits
         for tok in line.split():
