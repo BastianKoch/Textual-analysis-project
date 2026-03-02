@@ -6,6 +6,7 @@ Created on Wed Feb 25 13:07 2026
 
 # import packages
 import re
+import string
 from pathlib import Path
 import nltk
 from nltk.corpus import stopwords
@@ -13,34 +14,39 @@ from nltk.corpus import stopwords
 # download stopword list on first run (no-op if already cached)
 nltk.download("stopwords", quiet=True)
 _STOPWORDS = set(stopwords.words("english"))
+_PUNCT_TABLE = str.maketrans("", "", string.punctuation)
+
+# Matches speaker header lines, e.g. "ANTHONY KAMIN:", "RAYMOND C. STACHOWIAK:",
+# as well as structural labels like "ANSWER_1:", "QUESTION_1:"
+_HEADER_RE = re.compile(r'^[A-Z][A-Z0-9\s\.\,_]+:$')
 
 
-def remove_stopwords(text: str) -> str:
-    """Remove English stopwords from text, preserving whitespace and line structure.
+def normalize_text(text: str) -> str:
+    """Full normalization pipeline for NLP:
 
-    Structural label lines (e.g. ``ANSWER_1:``, ``QUESTION_1:``, speaker names
-    in all-caps followed by a colon) are left untouched.
+    1. Remove speaker-name header lines (e.g. ``ANTHONY KAMIN:``) and
+       structural labels (``ANSWER_1:``, ``QUESTION_1:``).
+    2. Remove punctuation.
+    3. Remove digits.
+    4. Remove English stopwords.
+    5. Tokenize by whitespace — output is a single space-separated token string.
     """
-    def _filter_line(line: str) -> str:
-        # preserve structural / label lines as-is
-        if re.match(r'^[A-Z0-9_]+:$', line.strip()):
-            return line
-        # split on whitespace boundaries, keeping the whitespace tokens
-        tokens = re.split(r'(\s+)', line)
-        filtered = []
-        for tok in tokens:
-            if re.match(r'^\s+$', tok):   # pure whitespace — keep
-                filtered.append(tok)
-            elif tok.lower() in _STOPWORDS:  # stopword — drop
-                pass
-            else:
-                filtered.append(tok)
-        # strip runs of multiple spaces that appear after consecutive drops
-        result = ''.join(filtered)
-        result = re.sub(r'  +', ' ', result).strip()
-        return result
-
-    return '\n'.join(_filter_line(line) for line in text.split('\n'))
+    tokens_out = []
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        # drop header/label lines
+        if _HEADER_RE.match(stripped):
+            continue
+        # remove punctuation
+        line_clean = stripped.translate(_PUNCT_TABLE)
+        # remove digits
+        line_clean = re.sub(r"\d+", "", line_clean)
+        # tokenize and filter stopwords
+        tokens = [t for t in line_clean.split() if t.lower() not in _STOPWORDS]
+        tokens_out.extend(tokens)
+    return " ".join(tokens_out)
 
 # define working directory relative to project root
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -344,8 +350,8 @@ for i in range(1,len(list_earnings_calls)):
     presentation_text=re.sub("\A[ \t]{1,}","",presentation_text)
     presentation_text=re.sub("\n[ \t]{1,}","\n",presentation_text)
     
-    # remove stopwords before writing
-    presentation_text = remove_stopwords(presentation_text)
+    # normalise: remove headers, punctuation, digits, stopwords; whitespace-tokenise
+    presentation_text = normalize_text(presentation_text)
 
     # write the presentation text to an output file
     output_file_presentation=open(segments_dir / (filename+'_presentation.txt'),"w",encoding='utf-8')
@@ -508,8 +514,8 @@ for i in range(1,len(list_earnings_calls)):
     # answer text, and dropped text to the corresponding output files.
     output_file_answers=open(segments_dir / (filename+'_answers.txt'),"w",encoding='utf-8')
     output_file_questions=open(segments_dir / (filename+'_questions.txt'),"w",encoding='utf-8')
-    output_file_answers.write(remove_stopwords(answer_text))
-    output_file_questions.write(remove_stopwords(question_text))
+    output_file_answers.write(normalize_text(answer_text))
+    output_file_questions.write(normalize_text(question_text))
     output_file_dropped_text=open(segments_dir / (filename+'_deleted_text.txt'),"w",encoding='utf-8')
     output_file_dropped_text.write(dropped_text)
     # close all three files.
