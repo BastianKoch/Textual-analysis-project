@@ -33,6 +33,7 @@ import csv
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import scipy.sparse as sp
 from sklearn.preprocessing import normalize
 
@@ -41,6 +42,7 @@ from sklearn.preprocessing import normalize
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PROC_DIR     = PROJECT_ROOT / "data" / "processed"
+RAW_DIR      = PROJECT_ROOT / "data" / "raw"
 VECTORS_DIR  = PROC_DIR / "esg_corpus_vectors"
 
 SETS    = ("combined", "pres", "answers")
@@ -56,6 +58,20 @@ with open(index_path, newline="", encoding="utf-8") as fh:
 transcript_ids = [r["transcript_id"] for r in rows]
 T = len(transcript_ids)
 print(f"Transcripts: {T:,}")
+
+# ---------------------------------------------------------------------------
+# Load call metadata (firm identifiers + date)
+# ---------------------------------------------------------------------------
+META_COLS = ["permco", "permno", "gvkey", "comnam",
+             "filename", "date_call", "year_call", "month_call", "day_call"]
+df_meta = pd.read_csv(RAW_DIR / "list_earnings_calls_group_project_upload.csv",
+                      dtype=str)
+df_meta["transcript_id"] = df_meta["filename"].str.replace(r"\.txt$", "",
+                                                             regex=True)
+meta_lookup: dict[str, dict] = (
+    df_meta.set_index("transcript_id")[META_COLS].to_dict(orient="index")
+)
+print(f"Metadata rows: {len(meta_lookup):,}")
 
 # ---------------------------------------------------------------------------
 # Compute cosine similarities
@@ -103,9 +119,11 @@ col_order = [
 out_path = PROC_DIR / "esg_talk.csv"
 with open(out_path, "w", newline="", encoding="utf-8") as fh:
     writer = csv.writer(fh)
-    writer.writerow(["transcript_id"] + col_order)
+    writer.writerow(META_COLS + col_order)
     for tid in transcript_ids:
-        row_vals = [results[tid].get(c, 0.0) for c in col_order]
-        writer.writerow([tid] + row_vals)
+        meta = meta_lookup.get(tid, {c: "" for c in META_COLS})
+        meta_vals = [meta.get(c, "") for c in META_COLS]
+        score_vals = [results[tid].get(c, 0.0) for c in col_order]
+        writer.writerow(meta_vals + score_vals)
 
-print(f"\nSaved → {out_path}  ({T:,} rows × {len(col_order)} score columns)")
+print(f"\nSaved → {out_path}  ({T:,} rows × {len(META_COLS) + len(col_order)} columns)")
