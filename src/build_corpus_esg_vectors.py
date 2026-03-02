@@ -17,7 +17,7 @@ where
 
 Inputs
 ------
-    data/processed/Text corpus cleaned/{E,S,G}/*.txt
+    data/processed/Text corpus/{E,S,G}/*.txt
     data/processed/bigram_tfidf_{label}.npz     (one per set)
     data/processed/bigram_vocab_{label}.csv     (one per set)
 
@@ -43,7 +43,7 @@ import scipy.sparse as sp
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR     = PROJECT_ROOT / "data"
-CORPUS_ROOT  = DATA_DIR / "processed" / "Text corpus cleaned"
+CORPUS_ROOT  = DATA_DIR / "processed" / "Text corpus"
 PROC_DIR     = DATA_DIR / "processed"
 OUT_DIR      = DATA_DIR / "processed" / "esg_corpus_vectors"
 OUT_DIR.mkdir(parents=True, exist_ok=True)

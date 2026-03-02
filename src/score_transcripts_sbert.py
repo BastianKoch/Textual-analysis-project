@@ -67,8 +67,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 
 VECTORS_DIR  = DATA_DIR / "processed" / "esg_vectors"
-SEGMENTS_DIR = DATA_DIR / "processed" / "Transcripts" / "Call_segments"
-OVERVIEW_CSV = DATA_DIR / "processed" / "Transcripts" / "Overview_Calls.csv"
+SEGMENTS_DIR = DATA_DIR / "interim" / "Transcripts" / "Call_segments"
+OVERVIEW_CSV = DATA_DIR / "interim" / "Transcripts" / "Overview_Calls.csv"
 
 RESULTS_DIR = DATA_DIR / "processed"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)

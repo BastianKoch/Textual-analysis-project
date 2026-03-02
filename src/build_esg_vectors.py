@@ -36,7 +36,7 @@ torch.manual_seed(SEED)
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CORPUS_DIR = os.path.join(BASE, "data", "processed", "Text corpus")
+CORPUS_DIR = os.path.join(BASE, "data", "processed", "Text corpus")  # cleaned corpus
 OUT_DIR = os.path.join(BASE, "data", "processed", "esg_vectors")
 os.makedirs(OUT_DIR, exist_ok=True)
 

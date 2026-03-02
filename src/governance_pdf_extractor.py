@@ -2,7 +2,7 @@
 Extract and clean text from the G20/OECD Principles of Corporate Governance PDF.
 
 Input:  data/external/Text corpus/G/OECD_Corporate Governance Principles.pdf
-Output: data/processed/Text corpus/G/OECD_Corporate_Governance_Principles.txt
+Output: data/interim/Text corpus/G/OECD_Corporate_Governance_Principles.txt
 
 Usage
 -----
@@ -16,7 +16,7 @@ import fitz  # PyMuPDF
 
 ROOT = Path(__file__).resolve().parents[1]
 PDF_PATH = ROOT / "data" / "external" / "Text corpus" / "G" / "OECD_Corporate Governance Principles.pdf"
-OUT_PATH = ROOT / "data" / "processed" / "Text corpus" / "G" / "OECD_Corporate_Governance_Principles.txt"
+OUT_PATH = ROOT / "data" / "interim" / "Text corpus" / "G" / "OECD_Corporate_Governance_Principles.txt"
 OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------------------

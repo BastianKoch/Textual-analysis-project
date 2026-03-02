@@ -1,7 +1,7 @@
 """
 build_bigrams.py
 ----------------
-For every normalized segment file in data/processed/Transcripts_nostop/
+For every normalized segment file in data/processed/Transcripts/
 (presentation, answers, questions) build a list of consecutive word bigrams
 and write them — one per line, space-separated — to data/interim/bigrams/.
 
@@ -24,7 +24,7 @@ import sys
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR     = PROJECT_ROOT / "data"
-INPUT_DIR    = DATA_DIR / "processed" / "Transcripts_nostop"
+INPUT_DIR    = DATA_DIR / "processed" / "Transcripts"
 OUTPUT_DIR   = DATA_DIR / "interim"  / "bigrams"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 

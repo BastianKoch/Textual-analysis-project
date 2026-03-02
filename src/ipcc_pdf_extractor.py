@@ -2,7 +2,7 @@
 Extract and clean text from the IPCC AR6 Synthesis Report Full Volume PDF.
 
 Input:  data/external/Text corpus/E/IPCC_AR6_SYR_FullVolume.pdf
-Output: data/processed/Text corpus/E/IPCC_AR6_SYR_FullVolume.txt
+Output: data/interim/Text corpus/E/IPCC_AR6_SYR_FullVolume.txt
 
 Usage
 -----
@@ -16,7 +16,7 @@ import fitz  # PyMuPDF
 
 ROOT = Path(__file__).resolve().parents[1]
 PDF_PATH = ROOT / "data" / "external" / "Text corpus" / "E" / "IPCC_AR6_SYR_FullVolume.pdf"
-OUT_PATH = ROOT / "data" / "processed" / "Text corpus" / "E" / "IPCC_AR6_SYR_FullVolume.txt"
+OUT_PATH = ROOT / "data" / "interim" / "Text corpus" / "E" / "IPCC_AR6_SYR_FullVolume.txt"
 OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------------------

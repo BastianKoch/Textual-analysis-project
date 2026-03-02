@@ -1,7 +1,7 @@
 """
 Scrape the IPCC AR6 Synthesis Report (Longer Report) and save cleaned plain text.
 
-Output: data/processed/Text corpus/E/ipcc_ar6_syr_longer_report.txt
+Output: data/interim/Text corpus/E/ipcc_ar6_syr_longer_report.txt
 
 Usage
 -----
@@ -173,7 +173,7 @@ text = normalize_for_nlp(text)
 # ---------------------------------------------------------------------------
 out_path = (
     Path(__file__).resolve().parents[1]
-    / "data" / "processed" / "Text corpus" / "E" / "ipcc_ar6_syr_longer_report.txt"
+    / "data" / "interim" / "Text corpus" / "E" / "ipcc_ar6_syr_longer_report.txt"
 )
 out_path.parent.mkdir(parents=True, exist_ok=True)
 out_path.write_text(text, encoding="utf-8")

@@ -24,7 +24,7 @@ from pathlib import Path
 # Paths
 # =============================================================================
 PROJECT_ROOT  = Path(__file__).resolve().parents[1]
-OVERVIEW_CSV  = PROJECT_ROOT / "data" / "processed" / "Transcripts" / "Overview_Calls.csv"
+OVERVIEW_CSV  = PROJECT_ROOT / "data" / "interim" / "Transcripts" / "Overview_Calls.csv"
 GVKEY_TXT     = PROJECT_ROOT / "data" / "interim" / "gvkeys.txt"
 PERMNO_TXT    = PROJECT_ROOT / "data" / "interim" / "permnos.txt"
 

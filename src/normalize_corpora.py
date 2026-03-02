@@ -9,10 +9,10 @@ Apply the standard NLP normalization pipeline to every E/S/G corpus text file:
     4. Remove English stopwords (NLTK)
     5. Tokenize by whitespace → single space-separated flat string
 
-Input:  data/processed/Text corpus/{E,S,G}/*.txt
-Output: same paths but under data/processed/Text corpus cleaned/{E,S,G}/
+Input:  data/interim/Text corpus/{E,S,G}/*.txt
+Output: data/processed/Text corpus/{E,S,G}/
 
-The originals in 'Text corpus/' are never modified.
+The originals in data/interim/Text corpus/ are never modified.
 """
 
 from __future__ import annotations
@@ -31,8 +31,8 @@ _PUNCT_TABLE = str.maketrans("", "", string.punctuation)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR     = PROJECT_ROOT / "data" / "processed"
-IN_ROOT      = DATA_DIR / "Text corpus"
-OUT_ROOT     = DATA_DIR / "Text corpus cleaned"
+IN_ROOT      = PROJECT_ROOT / "data" / "interim" / "Text corpus"
+OUT_ROOT     = DATA_DIR / "Text corpus"
 
 
 def normalize(text: str) -> str:
@@ -48,7 +48,7 @@ def normalize(text: str) -> str:
     return " ".join(tokens)
 
 
-# Discover all .txt files under Text corpus/
+# Discover all .txt files under data/interim/Text corpus/
 corpus_files = sorted(IN_ROOT.rglob("*.txt"))
 
 if not corpus_files:

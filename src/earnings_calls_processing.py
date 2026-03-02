@@ -54,7 +54,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 input_dir = DATA_DIR / "raw"
 output_dir = DATA_DIR / "processed"
-segments_dir = output_dir / "Transcripts_nostop"
+segments_dir = output_dir / "Transcripts"
 
 # ensure output directories exist
 segments_dir.mkdir(parents=True, exist_ok=True)

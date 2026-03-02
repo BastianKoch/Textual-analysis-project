@@ -38,8 +38,8 @@ from esg_scoring import compute_tfidf_esg_scores, load_esg_dict, load_segment_te
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 
-OVERVIEW_CSV = DATA_DIR / "processed" / "Transcripts" / "Overview_Calls.csv"
-SEGMENTS_DIR = DATA_DIR / "processed" / "Transcripts" / "Call_segments"
+OVERVIEW_CSV = DATA_DIR / "interim" / "Transcripts" / "Overview_Calls.csv"
+SEGMENTS_DIR = DATA_DIR / "interim" / "Transcripts" / "Call_segments"
 ESG_DICT_CSV = (
     DATA_DIR
     / "external"
