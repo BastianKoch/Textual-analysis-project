@@ -12,11 +12,13 @@ ipykernel
 # Data manipulation
 pandas
 numpy
+linearmodels
 
 # Text processing (uncomment as needed)
 nltk
 # spacy
 scikit-learn
+pymupdf
 
 # Visualization (uncomment as needed)
 matplotlib

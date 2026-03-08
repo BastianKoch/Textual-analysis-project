@@ -9,7 +9,6 @@ A group project for a Textual Analysis course that analyzes earnings call transc
 ## Project Organization
 
 ```
-├── Makefile           <- Makefile with convenience commands (e.g., `make requirements`)
 ├── README.md          <- The top-level README for developers using this project
 ├── data
 │   ├── external       <- Supplementary third-party data (e.g., stock prices, financials)
@@ -19,32 +18,50 @@ A group project for a Textual Analysis course that analyzes earnings call transc
 │
 ├── references         <- Data dictionaries, manuals, and all explanatory materials
 │
-├── notebooks          <- Jupyter notebooks for exploration and analysis
-│                         Naming convention: number-initials-description
-│                         (e.g., `1.0-bk-initial-data-exploration`)
-│
-├── pyproject.toml     <- Project configuration file with package metadata and tool settings
-│
-├── reports            
-│   └── figures        <- Generated graphics and figures to be used in reporting
+├── output
+│   ├── figures        <- Generated graphics and figures to be used in reporting
+│   └── tables         <- Generated LaTeX and text tables with summary statistics
 │
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment
 │
-├── reports            
-│   ├── figures        <- Generated graphics and figures to be used in reporting
-│   └── tables         <- Generated tables and summary statistics
-│
-└── src                <- Source code for use in this project
+└── code               <- Source code for the analysis pipeline
     │
-    ├── __init__.py    <- Makes src a Python module
+    ├── __init__.py                          <- Makes code a Python module
     │
-    └── (your reusable code, functions, and classes go here)
+    │   ── 0. Data Preparation ──
+    ├── 0.1_extract_gvkeys.py                <- Extract firm identifiers (gvkey, permno)
+    ├── 0.2_earnings_calls_processing.py     <- NLP normalization and transcript segmentation
+    ├── 0.3_governance_pdf_extractor.py      <- Extract G corpus from OECD PDF
+    ├── 0.4_ipcc_pdf_extractor.py            <- Extract E corpus from IPCC PDF
+    ├── 0.5_oecd_pdf_extractor.py            <- Extract S corpus from OECD Guidelines PDF
+    ├── 0.6_corpora_processing.py            <- Normalize E/S/G reference corpora
+    ├── 0.7_LMD_frac.py                      <- Compute Loughran-McDonald word fractions
+    │
+    │   ── 1. Feature Engineering ──
+    ├── 1.1_build_earnings_calls_bigrams.py  <- Build bigrams from transcript segments
+    ├── 1.2_build_tfidf.py                   <- Build TF-IDF matrices for transcripts
+    ├── 1.3_build_corpus_esg_vectors.py      <- Project ESG corpora into TF-IDF space
+    ├── 1.4_compute_esg_talk.py              <- Compute ESG cosine-similarity talk scores
+    │
+    │   ── 2. Exploration ──
+    ├── 2.1_bigram_exploration.py            <- Top-15 bigrams per ESG corpus (bar charts)
+    ├── 2.2_esg_talk_exploration.py          <- ESG talk distributions and time trends
+    │
+    │   ── 3. Analysis ──
+    ├── 3.1_event_study.py                   <- CAR event study and panel regressions
+    └── 3.2_esg_ratings.py                   <- ESG talk vs. next-year MSCI ESG ratings
 ```
 
-## Notebooks vs Source Code
+## Pipeline Overview
 
-- **notebooks/**: Use for exploration, analysis, and one-off experiments. Import functions from `src/`.
-- **src/**: Put reusable functions, classes, and data processing pipelines here. Import these into your notebooks.
+Run scripts in numbered order. Each script reads from `data/` and writes outputs back to `data/` or `output/`.
+
+```
+0.x  →  data preparation & corpus extraction
+1.x  →  bigram / TF-IDF / ESG talk feature engineering
+2.x  →  exploratory plots  →  output/figures/
+3.x  →  regressions / event study  →  output/tables/
+```
 
 ## Getting Started
 
@@ -87,17 +104,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Set Up Jupyter Kernel (Optional, for notebooks)
-
-Register this virtual environment as a Jupyter kernel:
-
-```bash
-python -m ipykernel install --user --name=ta_project --display-name="Python 3.10 (ta_project)"
-```
-
-Then in VS Code or Jupyter, select this kernel when running notebooks.
-
-### 5. Get the Data
+### 4. Get the Data
 
 The earnings call transcripts are stored in a shared location (not in this repository due to file size).
 
@@ -117,26 +124,19 @@ data/raw/Transcripts/
 └── ...
 ```
 
-### 6. Run Your First Notebook
-
-Start Jupyter and open the cleaning notebook:
+### 5. Run a Script
 
 ```bash
 # Make sure your venv is activated
-jupyter notebook
+python code/1.4_compute_esg_talk.py
 ```
 
-Then open `1.0-process-transcripts.ipynb` and run through the cells to:
-1. Load and inspect a sample transcript
-2. Test the cleaning functions
-3. Process all transcripts
+### 6. Working with the Code
 
-### 7. Working with the Code
+**To run a script from the project root:**
 
-**To use functions from the `src/` module in your notebook:**
-
-```python
-from src.text_processing import load_transcript, clean_text
+```bash
+python code/0.2_earnings_calls_processing.py
 ```
 
 **To add more packages:**
@@ -154,35 +154,6 @@ When you're done working:
 ```bash
 deactivate
 ```
-
-## Available Make Commands
-
-All commands should be run from the project root with the virtual environment activated.
-
-| Command | Description |
-|---|---|
-| `make requirements` | Install all Python dependencies from `requirements.txt` |
-| `make process_transcripts` | Process all earnings call transcripts (parse participants, presentations, Q&A) |
-| `make esg_scores` | Build ESG topic scores dataset using TF-IDF (outputs `data/processed/esg_scores.csv`) |
-| `make gvkeys` | Extract unique gvkeys from Overview_Calls.csv (outputs `data/processed/gvkeys.csv`) |
-| `make lint` | Check code style with ruff |
-| `make format` | Auto-format source code with ruff |
-| `make clean` | Delete compiled Python files and `__pycache__` directories |
-| `make help` | List all available commands |
-
-### Processing Transcripts
-
-To parse and segment all earnings call transcripts into the `data/processed/` directory:
-
-```bash
-make process_transcripts
-```
-
-This script:
-1. Reads the transcript list from `data/raw/list_earnings_calls_group_project_upload.csv`
-2. For each call, extracts corporate participants and analysts
-3. Splits each transcript into presentation, questions, and answers
-4. Writes results to `data/processed/Transcripts/`
 
 ## Data Access
 
